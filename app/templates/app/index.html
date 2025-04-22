@@ -7,6 +7,15 @@
 <body>
 <h2>Index page</h2>
 <br>
+<ul>
+    <li>
+        <a href="{% url 'app:create-pages' %}">Upload pages</a>
+    </li>
+    <li>
+        <a href="{% url 'app:services-list' %}">Services</a>
+    </li>
+</ul>
+<br>
 <form method="POST" action="{% url 'logout' %}">
     {% csrf_token %}
     <button class="dropdown-item" type="submit">Logout</button>
