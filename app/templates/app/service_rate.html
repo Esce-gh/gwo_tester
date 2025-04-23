@@ -1,21 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-{% if page is None %}
-    <h2>Nothing more to rate!</h2>
-{% else %}
-    <img width="400" height="600" src="{{ page.image.url }}" alt="image"/>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Upload</button>
-    </form>
-{% endif %}
+{% extends 'app/base.html' %}
 
-<a href="{% url 'app:index' %}">Go back</a>
-</body>
-</html>
+{% block title %}Rate service{% endblock %}
+
+{% block body %}
+    {% if page is None %}
+        <h2>Nothing more to rate!</h2>
+    {% else %}
+        <img width="400" height="600" src="{{ page.image.url }}" alt="image"/>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Upload</button>
+        </form>
+    {% endif %}
+    <a href="{% url 'app:user-service-ratings' user_id=user.id service_id=page.service.id %}">View rated pages</a>
+    <br>
+    <a href="{% url 'app:index' %}">Main page</a>
+{% endblock %}

@@ -1,26 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<h2>Index page</h2>
-<br>
-<ul>
-    {% if user.is_superuser %}
+{% extends 'app/base.html' %}
+
+{% block title %}Main page{% endblock %}
+
+{% block body %}
+    <h2>Index page</h2>
+    <br>
+    <ul>
+        {% if user.is_superuser %}
+            <li>
+                <a href="{% url 'app:create-pages' %}">Upload pages</a>
+            </li>
+        {% endif %}
         <li>
-            <a href="{% url 'app:create-pages' %}">Upload pages</a>
+            <a href="{% url 'app:services-list' %}">Services</a>
         </li>
-    {% endif %}
-    <li>
-        <a href="{% url 'app:services-list' %}">Services</a>
-    </li>
-</ul>
-<br>
-<form method="POST" action="{% url 'logout' %}">
-    {% csrf_token %}
-    <button class="dropdown-item" type="submit">Logout</button>
-</form>
-</body>
-</html>
+    </ul>
+    <br>
+    <form method="POST" action="{% url 'logout' %}?next={% url 'app:index' %}">
+        {% csrf_token %}
+        <button class="dropdown-item" type="submit">Logout</button>
+    </form>
+{% endblock %}

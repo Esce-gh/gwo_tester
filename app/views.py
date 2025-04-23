@@ -3,6 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseForbidden, HttpResponseNotFound
 from django.shortcuts import render, redirect, get_object_or_404
+from django.utils import timezone
 from django.views.generic import TemplateView, ListView
 
 from app.forms import PageForm, RatingForm
@@ -29,7 +30,7 @@ def create_pages_view(request):
             pages.append(page)
 
         Page.objects.bulk_create(pages)
-        return redirect("app:index")  # TODO: change the redirect
+        return redirect("app:index")
 
     return render(request, "app/create_pages.html", {"form": PageForm()})
 
@@ -79,8 +80,10 @@ def rate_service_edit_view(request, user_id, rating_id):
     if request.method == "POST":
         form = RatingForm(request.POST, instance=rating)
         if form.is_valid():
-            form.save()
-            return redirect("app:user-service-ratings", service_id=rating.page.service_id)
+            new_rating = form.save(commit=False)
+            new_rating.created_at = timezone.now()
+            new_rating.save()
+            return redirect("app:user-service-ratings", service_id=rating.page.service_id, user_id=user_id)
         return render(request, "app/service_rate.html", {"form": form, "page": rating.page, "errors": form.errors})
 
     form = RatingForm(instance=rating, initial={'page_id': getattr(rating.page, 'id', None)})
