@@ -13,13 +13,6 @@
         {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Upload</button>
-        <ul>
-            {% for field, field_errors in errors.items %}
-                {% for error in field_errors %}
-                    <li>{{ field }}: {{ error }}</li>
-                {% endfor %}
-            {% endfor %}
-        </ul>
     </form>
 {% endif %}
 

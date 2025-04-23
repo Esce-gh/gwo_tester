@@ -8,9 +8,11 @@
 <h2>Index page</h2>
 <br>
 <ul>
-    <li>
-        <a href="{% url 'app:create-pages' %}">Upload pages</a>
-    </li>
+    {% if user.is_superuser %}
+        <li>
+            <a href="{% url 'app:create-pages' %}">Upload pages</a>
+        </li>
+    {% endif %}
     <li>
         <a href="{% url 'app:services-list' %}">Services</a>
     </li>

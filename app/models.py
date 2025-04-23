@@ -27,11 +27,24 @@ class Page(models.Model):
         return self.image.name
 
 
+class RatingManager(models.Manager):
+    def get_ratings(self, user, service_id):
+        return self.get_queryset().select_related("page").filter(user=user, page__service_id=service_id).order_by("-created_at")
+
+    def get_rating(self, user, rating_id):
+        return self.get_queryset().select_related("page").get(id=rating_id, user=user)
+
 class Rating(models.Model):
     page = models.ForeignKey(Page, on_delete=models.RESTRICT)
     user = models.ForeignKey(User, on_delete=models.RESTRICT)
+    created_at = models.DateTimeField(auto_now_add=True)
     is_ok = models.BooleanField()
     comment = models.TextField(blank=True, null=True)
 
+    objects = RatingManager()
+
     def __str__(self):
         return f"Rating of {self.page} by {self.user}"
+
+    class Meta:
+        unique_together = ['page', 'user']
