@@ -1,5 +1,5 @@
 from django.contrib.auth.models import User
-from django.db import models
+from django.db import models, transaction, IntegrityError
 
 
 class RatingCriteria(models.TextChoices):
@@ -46,6 +46,11 @@ class RatingManager(models.Manager):
 
     def get_rating(self, user, rating_id):
         return self.get_queryset().select_related("page").get(id=rating_id, user=user)
+
+    def save_rating(self, rating, criteria):
+        with transaction.atomic():
+            rating.save()
+            criteria.save()
 
 
 class Rating(models.Model):

@@ -52,7 +52,7 @@ class ServiceListView(LoginRequiredMixin, ListView):
 def rate_service_view(request, service_id):
     if request.method == "GET":
         page = Page.objects.get_new_page(request.user, service_id).first()
-        criteria_form = get_form_class(page.service.criteria)
+        criteria_form = get_form_class(page.service.criteria) if page else None
         rating_form = RatingForm(initial={'page_id': getattr(page, 'id', None)})
         return render(request, "app/service_rate.html",
                       {"criteria_form": criteria_form, 'rating_form': rating_form, "page": page})
@@ -80,9 +80,7 @@ def rate_service_view(request, service_id):
     criteria.rating = rating
 
     try:
-        with transaction.atomic():
-            rating.save()
-            criteria.save()
+        Rating.objects.save_rating(rating, criteria)
     except IntegrityError:
         return HttpResponseServerError()
     return redirect("app:services-rate", service_id=service_id)
@@ -129,9 +127,7 @@ def rate_service_edit_view(request, user_id, rating_id):
     new_rating.created_at = timezone.now()
 
     try:
-        with transaction.atomic():
-            new_rating.save()
-            criteria.save()
+        Rating.objects.save_rating(new_rating, criteria)
     except IntegrityError:
         return HttpResponseServerError()
     return redirect("app:user-service-ratings", service_id=rating.page.service_id, user_id=user_id)

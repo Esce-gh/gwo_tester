@@ -14,7 +14,9 @@
             <button type="submit">Upload</button>
         </form>
     {% endif %}
-    <a href="{% url 'app:user-service-ratings' user_id=user.id service_id=page.service.id %}">View rated pages</a>
+    {% if page is not None %}
+        <a href="{% url 'app:user-service-ratings' user_id=user.id service_id=page.service.id %}">View rated pages</a>
+    {% endif %}
     <br>
     <a href="{% url 'app:index' %}">Main page</a>
 {% endblock %}
