@@ -1,6 +1,6 @@
 from django import forms
 
-from app.models import Service, Page, Rating
+from app.models import Page, Rating, CriteriaPageNumber
 
 
 class PageForm(forms.ModelForm):
@@ -14,4 +14,10 @@ class RatingForm(forms.ModelForm):
 
     class Meta:
         model = Rating
-        fields = ['is_ok', 'comment', 'page_id']
+        fields = ['page_id']
+
+
+class CriteriaPageNumberForm(forms.ModelForm):
+    class Meta:
+        model = CriteriaPageNumber
+        fields = ['page_number_detected', 'page_number_visible']

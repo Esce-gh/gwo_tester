@@ -9,7 +9,8 @@
         <img width="400" height="600" src="{{ page.image.url }}" alt="image"/>
         <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            {{ form.as_p }}
+            {{ criteria_form.as_p }}
+            {{ rating_form.as_p }}
             <button type="submit">Upload</button>
         </form>
     {% endif %}
