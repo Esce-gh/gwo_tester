@@ -4,3 +4,5 @@ psycopg2-binary
 django-environ
 django-cors-headers
 pillow
+django-crispy-forms
+crispy-bootstrap5

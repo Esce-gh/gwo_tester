@@ -3,21 +3,16 @@
 {% block title %}Main page{% endblock %}
 
 {% block body %}
-    <h2>Index page</h2>
-    <br>
-    <ul>
-        {% if user.is_superuser %}
-            <li>
-                <a href="{% url 'app:create-pages' %}">Upload pages</a>
-            </li>
-        {% endif %}
-        <li>
-            <a href="{% url 'app:services-list' %}">Services</a>
-        </li>
-    </ul>
-    <br>
-    <form method="POST" action="{% url 'logout' %}?next={% url 'app:index' %}">
-        {% csrf_token %}
-        <button class="dropdown-item" type="submit">Logout</button>
-    </form>
+    <div class="container d-flex flex-column align-items-center mt-5">
+        <h2 class="mb-4">CAISE Tester</h2>
+
+        <div class="d-flex flex-column align-items-center gap-3">
+            {% if user.is_superuser %}
+                <a href="{% url 'app:create-pages' %}" class="btn btn-primary w-100" style="max-width: 300px;">Upload
+                    Pages</a>
+            {% endif %}
+            <a href="{% url 'app:services-list' %}" class="btn btn-outline-primary w-100" style="max-width: 300px;">Services</a>
+        </div>
+    </div>
+
 {% endblock %}

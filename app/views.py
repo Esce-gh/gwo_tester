@@ -40,7 +40,6 @@ def create_pages_view(request):
     return redirect("app:index")
 
 
-
 class ServiceListView(LoginRequiredMixin, ListView):
     model = Service
     template_name = "app/service_list.html"
@@ -90,9 +89,15 @@ class UserServiceRatingsListView(LoginRequiredMixin, ListView):
     template_name = "app/user_service_ratings.html"
     model = Rating
     context_object_name = "ratings"
+    paginate_by = 9
 
     def get_queryset(self):
         return Rating.objects.get_ratings(self.request.user, self.kwargs['service_id'])
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['service'] = Service.objects.get(pk=self.kwargs['service_id'])
+        return context
 
 
 @login_required(login_url='login')
@@ -131,4 +136,3 @@ def rate_service_edit_view(request, user_id, rating_id):
     except IntegrityError:
         return HttpResponseServerError()
     return redirect("app:user-service-ratings", service_id=rating.page.service_id, user_id=user_id)
-

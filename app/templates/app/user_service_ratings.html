@@ -3,12 +3,59 @@
 {% block title %}User ratings{% endblock %}
 
 {% block body %}
-    {% for rating in ratings %}
-        <div>
-            <a href="{% url 'app:user-rating-edit' user_id=rating.user_id rating_id=rating.id %}">
-                <img width="100" height="170" src="{{ rating.page.image.url }}" alt="image"/>
-            </a>
-            <p>{{ rating.created_at }}</p>
+    <div class="container mt-5">
+        <h2 class="mb-4">User ratings for {{ service.name }}</h2>
+
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for rating in ratings %}
+                <div class="col">
+                    <div class="card">
+                        <a href="{% url 'app:user-rating-edit' user_id=rating.user_id rating_id=rating.id %}">
+                            <img class="card-img-top img-fluid" src="{{ rating.page.image.url }}" alt="image" />
+                        </a>
+                        <div class="card-body">
+                            <p class="card-text">{{ rating.created_at }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
         </div>
-    {% endfor %}
+
+        <div class="d-flex justify-content-center mt-4">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1" aria-label="First">
+                                <span aria-hidden="true">&laquo;&laquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+                    {% endif %}
+
+                    <li class="page-item disabled">
+                        <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                    </li>
+
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last">
+                                <span aria-hidden="true">&raquo;&raquo;</span>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+
 {% endblock %}
