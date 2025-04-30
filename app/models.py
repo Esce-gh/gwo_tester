@@ -4,6 +4,8 @@ from django.db import models, transaction, IntegrityError
 
 class RatingCriteria(models.TextChoices):
     PAGE_NUMBER = 'PN', 'Page Number Criteria'
+    HEADER_FOOTER = 'HF', 'Header Footer Criteria'
+    OBJECT_DETECTION = 'OD', 'Object Detection Criteria'
 
 
 class Service(models.Model):
@@ -68,10 +70,28 @@ class Rating(models.Model):
         unique_together = ['page', 'user']
 
 
-class CriteriaPageNumber(models.Model):
+class CriteriaBaseClass(models.Model):
     rating = models.OneToOneField(Rating, on_delete=models.RESTRICT)
-    page_number_visible = models.BooleanField()
-    page_number_detected = models.BooleanField()
+
+    class Meta:
+        abstract = True
 
     def __str__(self):
         return f"Criteria for {self.rating}"
+
+
+class CriteriaPageNumber(CriteriaBaseClass):
+    page_number_visible = models.BooleanField()
+    page_number_detected = models.BooleanField()
+
+
+class CriteriaHeaderFooter(CriteriaBaseClass):
+    header_visible = models.BooleanField()
+    header_detected = models.BooleanField()
+    footer_visible = models.BooleanField()
+    footer_detected = models.BooleanField()
+
+
+class CriteriaObjectDetection(CriteriaBaseClass):
+    visible_objects = models.IntegerField()
+    detected_objects = models.IntegerField()
