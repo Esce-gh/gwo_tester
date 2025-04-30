@@ -6,3 +6,4 @@ django-cors-headers
 pillow
 django-crispy-forms
 crispy-bootstrap5
+gunicorn

@@ -1,10 +1,10 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
-from django.db import transaction, IntegrityError
+from django.db import IntegrityError
 from django.forms.utils import ErrorDict
 from django.http import HttpResponseForbidden, HttpResponseNotFound, Http404, HttpResponseServerError
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 from django.views.generic import TemplateView, ListView
@@ -12,6 +12,7 @@ from django.views.generic import TemplateView, ListView
 from app.forms import PageForm, RatingForm
 from app.models import Page, Service, Rating
 from app.utils import get_form_class, get_criteria_model
+from gwo_tester import settings
 
 
 class IndexView(LoginRequiredMixin, TemplateView):
@@ -96,7 +97,7 @@ class UserServiceRatingsListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['service'] = Service.objects.get(pk=self.kwargs['service_id'])
+        context['service'] = get_object_or_404(Service, id=self.kwargs['service_id'])
         return context
 
 
