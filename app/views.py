@@ -1,4 +1,6 @@
+from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
@@ -137,3 +139,16 @@ def rate_service_edit_view(request, user_id, rating_id):
     except IntegrityError:
         return HttpResponseServerError()
     return redirect("app:user-service-ratings", service_id=rating.page.service_id, user_id=user_id)
+
+
+def signup(request):
+    if request.user.is_authenticated:
+        return redirect("app:index")
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('app:index')
+    else:
+        form = UserCreationForm()
+    return render(request, 'app/signup.html', {'form': form})

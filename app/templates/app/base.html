@@ -14,13 +14,18 @@
             <a class="btn btn-outline-primary me-2" href="{% url 'app:index' %}">Main Page</a>
             <a class="btn btn-outline-primary" href="{% url 'app:services-list' %}">Services</a>
         </div>
-
+        {% if request.user.is_authenticated %}
         <div class="ms-auto">
             <form method="post" action="{% url 'logout' %}">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-danger">Logout</button>
             </form>
         </div>
+        {% else %}
+        <div class="ms-auto">
+            <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+        </div>
+        {% endif %}
     </div>
 </nav>
 

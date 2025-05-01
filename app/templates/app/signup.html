@@ -1,0 +1,17 @@
+{% extends 'app/base.html' %}
+
+{% block title %}Sign up{% endblock %}
+
+{% block body %}
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+  <div class="col-md-6 col-lg-4 p-4 border rounded shadow-sm bg-light">
+    <h2 class="text-center mb-4">Sign up</h2>
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {% load crispy_forms_tags %}
+      {{ form|crispy }}
+      <button type="submit" class="btn btn-primary w-100 mt-3">Sign up</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
