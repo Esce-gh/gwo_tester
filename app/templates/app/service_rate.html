@@ -1,32 +1,37 @@
 {% extends 'app/base.html' %}
+{% load i18n %}
 {% load crispy_forms_tags %}
 
-{% block title %}Rate service{% endblock %}
+{% block title %}{% trans 'Rate service' %}{% endblock %}
 
 {% block body %}
-<div class="container mt-5">
-    <div class="d-flex flex-column align-items-center text-center">
-        {% if page is None %}
-            <h2>Nothing more to rate!</h2>
-        {% else %}
-            <div class="row w-100">
-                <div class="col-md-6 d-flex justify-content-center mb-3 mb-md-0">
-                    <img src="{{ page.image.url }}" alt="image" class="img-fluid border border-secondary rounded" />
-                </div>
+    <div class="container mt-5">
+        <div class="d-flex flex-column align-items-center text-center">
+            {% if page is None %}
+                <h2>{% trans 'Nothing more to rate' %}</h2>
+                <a href="{% url 'app:user-service-ratings' user_id=user.id service_id=service_id %}"
+                           class="mt-4 btn btn-outline-primary btn-lg">{% trans 'View rated pages' %}</a>
+            {% else %}
+                <div class="row w-100">
+                    <div class="col-md-6 d-flex justify-content-center mb-3 mb-md-0">
+                        <img src="{{ page.image.url }}" alt="image" class="img-fluid border border-secondary rounded"/>
+                    </div>
 
-                <div class="col-md-6 d-flex justify-content-center align-items-center flex-column">
-                    <form method="post" enctype="multipart/form-data" class="w-75 p-4 border border-secondary rounded">
-                        {% csrf_token %}
-                        {{ criteria_form|crispy }}
-                        {{ rating_form|crispy }}
-                        <button type="submit" class="btn btn-success mt-3">Upload</button>
-                    </form>
+                    <div class="col-md-6 d-flex justify-content-center align-items-center flex-column">
+                        <form method="post" enctype="multipart/form-data"
+                              class="w-75 p-4 border border-secondary rounded">
+                            {% csrf_token %}
+                            {{ criteria_form|crispy }}
+                            {{ rating_form|crispy }}
+                            <button type="submit" class="btn btn-success mt-3">{% trans 'Upload' %}</button>
+                        </form>
 
-                    <a href="{% url 'app:user-service-ratings' user_id=user.id service_id=page.service.id %}" class="mt-4 btn btn-outline-primary btn-lg">View rated pages</a>
+                        <a href="{% url 'app:user-service-ratings' user_id=user.id service_id=service_id %}"
+                           class="mt-4 btn btn-outline-primary btn-lg">{% trans 'View rated pages' %}</a>
+                    </div>
                 </div>
-            </div>
-        {% endif %}
+            {% endif %}
+        </div>
     </div>
-</div>
 
 {% endblock %}

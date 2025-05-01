@@ -1,10 +1,11 @@
 {% extends 'app/base.html' %}
+{% load i18n %}
 
-{% block title %}User ratings{% endblock %}
+{% block title %}{% trans 'User ratings' %}{% endblock %}
 
 {% block body %}
     <div class="container mt-5">
-        <h2 class="mb-4">User ratings for {{ service.name }}</h2>
+        <h2 class="mb-4">{% trans 'Your ratings for' %} {{ service.name }}</h2>
 
         <div class="row row-cols-1 row-cols-md-3 g-4">
             {% for rating in ratings %}

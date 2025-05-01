@@ -1,4 +1,3 @@
-from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -14,7 +13,6 @@ from django.views.generic import TemplateView, ListView
 from app.forms import PageForm, RatingForm
 from app.models import Page, Service, Rating
 from app.utils import get_form_class, get_criteria_model
-from gwo_tester import settings
 
 
 class IndexView(LoginRequiredMixin, TemplateView):
@@ -57,7 +55,8 @@ def rate_service_view(request, service_id):
         criteria_form = get_form_class(page.service.criteria) if page else None
         rating_form = RatingForm(initial={'page_id': getattr(page, 'id', None)})
         return render(request, "app/service_rate.html",
-                      {"criteria_form": criteria_form, 'rating_form': rating_form, "page": page})
+                      {"criteria_form": criteria_form, 'rating_form': rating_form, "page": page,
+                       'service_id': service_id})
 
     try:
         page = Page.objects.get_page(request.POST.get('page_id'))
@@ -72,7 +71,8 @@ def rate_service_view(request, service_id):
         errors.update(rating_form.errors)
         errors.update(criteria_form.errors)
         return render(request, "app/service_rate.html",
-                      {"criteria_form": criteria_form, 'rating_form': rating_form, "page": page, "errors": errors})
+                      {"criteria_form": criteria_form, 'rating_form': rating_form, "page": page,
+                       'service_id': service_id, "errors": errors})
 
     rating = rating_form.save(commit=False)
     rating.page = page
@@ -119,7 +119,8 @@ def rate_service_edit_view(request, user_id, rating_id):
         rating_form = RatingForm(instance=rating, initial={'page_id': getattr(rating.page, 'id', None)})
         criteria_form = get_form_class(rating.criteria)(instance=criteria)
         return render(request, "app/service_rate.html",
-                      {"rating_form": rating_form, 'criteria_form': criteria_form, 'page': rating.page})
+                      {"rating_form": rating_form, 'criteria_form': criteria_form, 'page': rating.page,
+                       'service_id': rating.page.service_id})
 
     rating_form = RatingForm(request.POST, instance=rating)
     criteria_form = get_form_class(rating.criteria)(request.POST, instance=criteria)
@@ -129,7 +130,7 @@ def rate_service_edit_view(request, user_id, rating_id):
         errors.update(criteria_form.errors)
         return render(request, "app/service_rate.html",
                       {"rating_form": rating_form, 'criteria_form': criteria_form, "page": rating.page,
-                       "errors": errors})
+                       'service_id': rating.page.service_idm, "errors": errors})
 
     new_rating = rating_form.save(commit=False)
     new_rating.created_at = timezone.now()

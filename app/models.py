@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models, transaction, IntegrityError
+from django.utils.translation import gettext_lazy as _
 
 
 class RatingCriteria(models.TextChoices):
@@ -30,8 +31,8 @@ class PageManager(models.Manager):
 
 
 class Page(models.Model):
-    service = models.ForeignKey(Service, on_delete=models.RESTRICT)
-    image = models.ImageField(upload_to='images/')
+    service = models.ForeignKey(Service, on_delete=models.RESTRICT, verbose_name=_('Service'))
+    image = models.ImageField(upload_to='images/', verbose_name=_('Image'))
 
     objects = PageManager()
 
@@ -81,17 +82,17 @@ class CriteriaBaseClass(models.Model):
 
 
 class CriteriaPageNumber(CriteriaBaseClass):
-    page_number_visible = models.BooleanField()
-    page_number_detected = models.BooleanField()
+    page_number_visible = models.BooleanField(verbose_name=_("Is page number visible"))
+    page_number_detected = models.BooleanField(verbose_name=_("Is page number detected"))
 
 
 class CriteriaHeaderFooter(CriteriaBaseClass):
-    header_visible = models.BooleanField()
-    header_detected = models.BooleanField()
-    footer_visible = models.BooleanField()
-    footer_detected = models.BooleanField()
+    header_visible = models.BooleanField(verbose_name=_("Is header visible"))
+    header_detected = models.BooleanField(verbose_name=_("Is header detected"))
+    footer_visible = models.BooleanField(verbose_name=_("Is footer visible"))
+    footer_detected = models.BooleanField(verbose_name=_("Is footer detected"))
 
 
 class CriteriaObjectDetection(CriteriaBaseClass):
-    visible_objects = models.IntegerField()
-    detected_objects = models.IntegerField()
+    visible_objects = models.IntegerField(verbose_name=_("Visible objects"))
+    detected_objects = models.IntegerField(verbose_name=_("Correctly detected objects"))

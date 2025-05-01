@@ -1,10 +1,11 @@
 {% extends 'app/base.html' %}
+{% load i18n %}
 
-{% block title %}Services{% endblock %}
+{% block title %}{% trans 'Services' %}{% endblock %}
 
 {% block body %}
     <div class="container d-flex flex-column align-items-center mt-5">
-        <h2 class="mb-4">Services</h2>
+        <h2 class="mb-4">{% trans 'Services' %}</h2>
 
         <div class="d-flex flex-column align-items-center gap-3">
             {% for service in services %}
