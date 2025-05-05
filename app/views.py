@@ -1,3 +1,6 @@
+import json
+import os
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -29,9 +32,17 @@ def create_pages_view(request):
         return render(request, "app/create_pages.html", {"form": PageForm()})
 
     images = request.FILES.getlist("images")
+    json_file = request.FILES.get("time_data")
+    data = json.load(json_file)
+    time_data = {}
+    for i in data:
+        time_data[f'{i['filename']}'] = i['service_execution_time']
+
     pages = []
     for image in images:
-        form = PageForm(request.POST, files={"image": image})
+        form_data = request.POST.copy()
+        form_data['execution_time'] = time_data.get(f'{os.path.splitext(image.name)[0]}')
+        form = PageForm(form_data, files={"image": image})
         if form.is_valid() is False:
             return render(request, "app/create_pages.html", {"form": form, "errors": form.errors})
         page = form.save(commit=False)

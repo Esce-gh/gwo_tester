@@ -6,7 +6,8 @@ from app.models import Page, Rating, CriteriaPageNumber, CriteriaHeaderFooter, C
 class PageForm(forms.ModelForm):
     class Meta:
         model = Page
-        fields = ['service', 'image']
+        fields = ['service', 'image', 'execution_time']
+        widgets = {'execution_time': forms.HiddenInput}
 
 
 class RatingForm(forms.ModelForm):

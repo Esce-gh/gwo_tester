@@ -33,6 +33,7 @@ class PageManager(models.Manager):
 class Page(models.Model):
     service = models.ForeignKey(Service, on_delete=models.RESTRICT, verbose_name=_('Service'))
     image = models.ImageField(upload_to='images/', verbose_name=_('Image'))
+    execution_time = models.FloatField(verbose_name=_('Execution Time'))
 
     objects = PageManager()
 
