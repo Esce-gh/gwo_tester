@@ -393,3 +393,4 @@ static/
 media/
 .idea/
 docker-compose.override.yml
+*.sql

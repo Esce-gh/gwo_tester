@@ -23,11 +23,11 @@
                             {% csrf_token %}
                             {{ criteria_form|crispy }}
                             {{ rating_form|crispy }}
-                            <button type="submit" class="btn btn-success mt-3">{% trans 'Upload' %}</button>
+                            <button type="submit" class="btn btn-success mt-3 w-100">{% trans 'Upload' %}</button>
                         </form>
 
                         <a href="{% url 'app:user-service-ratings' user_id=user.id service_id=service_id %}"
-                           class="mt-4 btn btn-outline-primary btn-lg">{% trans 'View rated pages' %}</a>
+                           class="mt-4 btn btn-outline-primary btn-lg w-75">{% trans 'View rated pages' %}</a>
                     </div>
                 </div>
             {% endif %}

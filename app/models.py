@@ -7,6 +7,8 @@ class RatingCriteria(models.TextChoices):
     PAGE_NUMBER = 'PN', 'Page Number Criteria'
     HEADER_FOOTER = 'HF', 'Header Footer Criteria'
     OBJECT_DETECTION = 'OD', 'Object Detection Criteria'
+    IMAGE_DETECTION = 'IMD', 'Image Detection Criteria'
+    OCR = 'OCR', 'OCR Criteria'
 
 
 class Service(models.Model):
@@ -74,6 +76,7 @@ class Rating(models.Model):
 
 class CriteriaBaseClass(models.Model):
     rating = models.OneToOneField(Rating, on_delete=models.RESTRICT)
+    comment = models.TextField(blank=True, verbose_name=_('Additional notes'))
 
     class Meta:
         abstract = True
@@ -97,3 +100,12 @@ class CriteriaHeaderFooter(CriteriaBaseClass):
 class CriteriaObjectDetection(CriteriaBaseClass):
     visible_objects = models.IntegerField(verbose_name=_("Visible objects"))
     detected_objects = models.IntegerField(verbose_name=_("Correctly detected objects"))
+
+
+class CriteriaImageDetection(CriteriaBaseClass):
+    visible_images = models.IntegerField(verbose_name=_("Visible images"))
+    detected_images = models.IntegerField(verbose_name=_("Correctly detected images"))
+
+
+class CriteriaOCR(CriteriaBaseClass):
+    word_recognition_errors = models.IntegerField(verbose_name=_("Number of misrecognized words"))
