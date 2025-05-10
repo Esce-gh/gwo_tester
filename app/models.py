@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
-from django.db import models, transaction, IntegrityError
+from django.db import models, transaction
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 
@@ -9,6 +10,11 @@ class RatingCriteria(models.TextChoices):
     OBJECT_DETECTION = 'OD', 'Object Detection Criteria'
     IMAGE_DETECTION = 'IMD', 'Image Detection Criteria'
     OCR = 'OCR', 'OCR Criteria'
+
+
+class PageTypes(models.TextChoices):
+    FULL = 'F', 'Full Page'
+    SECTION = 'S', 'Page Section'
 
 
 class Service(models.Model):
@@ -31,16 +37,51 @@ class PageManager(models.Manager):
     def get_page(self, page_id):
         return self.get_queryset().select_related('service').get(pk=page_id)
 
+    def save_pages(self, page_data):
+        pages = []
+        page_sets = []
+        page_set_items = []
+        for p in page_data:
+            if not p.get('sections'):
+                pages.append(p['page'])
+                continue
+            page_sets.append(p['page'])
+            for s in p['sections']:
+                pages.append(s)
+                page_set_items.append(PageSetItem(page=s, pageset=p['page']))
+        with transaction.atomic():
+            self.bulk_create(pages)
+            PageSet.objects.bulk_create(page_sets)
+            PageSetItem.objects.bulk_create(page_set_items)
+
 
 class Page(models.Model):
     service = models.ForeignKey(Service, on_delete=models.RESTRICT, verbose_name=_('Service'))
     image = models.ImageField(upload_to='images/', verbose_name=_('Image'))
-    execution_time = models.FloatField(verbose_name=_('Execution Time'))
+    execution_time = models.FloatField(blank=True, null=True, verbose_name=_('Execution Time'))
+    text = models.TextField(blank=True, null=True, verbose_name=_('Text'))
+    type = models.CharField(choices=PageTypes.choices, default=PageTypes.FULL)
 
     objects = PageManager()
 
     def __str__(self):
         return self.image.name
+
+
+class PageSet(models.Model):
+    image = models.ImageField(upload_to='images/', verbose_name=_('Image'))
+    execution_time = models.FloatField(blank=True, null=True, verbose_name=_('Execution Time'))
+
+    def __str__(self):
+        return self.image.name
+
+
+class PageSetItem(models.Model):
+    pageset = models.ForeignKey(PageSet, on_delete=models.RESTRICT)
+    page = models.ForeignKey(Page, on_delete=models.RESTRICT)
+
+    def __str__(self):
+        return f'Pageset: {self.pageset} Page: {self.page}'
 
 
 class RatingManager(models.Manager):
@@ -53,7 +94,15 @@ class RatingManager(models.Manager):
     def get_rating(self, user, rating_id):
         return self.get_queryset().select_related("page").get(id=rating_id, user=user)
 
-    def save_rating(self, rating, criteria):
+    def save_rating(self, page, user, criteria):
+        rating = Rating(page=page, user=user, criteria=page.service.criteria)
+        with transaction.atomic():
+            rating.save()
+            criteria.rating = rating
+            criteria.save()
+
+    def update_rating(self, rating, criteria):
+        rating.created_at = timezone.now()
         with transaction.atomic():
             rating.save()
             criteria.save()

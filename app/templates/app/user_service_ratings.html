@@ -8,19 +8,21 @@
         <h2 class="mb-4">{% trans 'Your ratings for' %} {{ service.name }}</h2>
 
         <div class="row row-cols-1 row-cols-md-3 g-4">
-            {% for rating in ratings %}
-                <div class="col">
-                    <div class="card">
-                        <a href="{% url 'app:user-rating-edit' user_id=rating.user_id rating_id=rating.id %}">
-                            <img class="card-img-top img-fluid" src="{{ rating.page.image.url }}" alt="image" />
-                        </a>
-                        <div class="card-body">
-                            <p class="card-text">{{ rating.created_at }}</p>
+        {% for rating in ratings %}
+            <div class="col">
+                <div class="card h-100 d-flex flex-column">
+                    <a href="{% url 'app:user-rating-edit' user_id=rating.user_id rating_id=rating.id %}">
+                        <div class="ratio ratio-4x3">
+                            <img src="{{ rating.page.image.url }}" alt="image" class="card-img-top img-fluid" style="object-fit: cover;">
                         </div>
+                    </a>
+                    <div class="card-body mt-auto">
+                        <p class="card-text">{{ rating.created_at }}</p>
                     </div>
                 </div>
-            {% endfor %}
-        </div>
+            </div>
+        {% endfor %}
+    </div>
 
         <div class="d-flex justify-content-center mt-4">
             <nav aria-label="Page navigation example">

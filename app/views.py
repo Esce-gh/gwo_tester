@@ -6,15 +6,13 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import IntegrityError
-from django.forms.utils import ErrorDict
 from django.http import HttpResponseForbidden, HttpResponseNotFound, Http404, HttpResponseServerError
 from django.shortcuts import render, redirect, get_object_or_404
-from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 from django.views.generic import TemplateView, ListView
 
-from app.forms import PageForm, RatingForm
-from app.models import Page, Service, Rating
+from app.forms import PageForm, PageSetForm
+from app.models import Page, Service, Rating, PageTypes
 from app.utils import get_form_class, get_criteria_model
 
 
@@ -32,23 +30,38 @@ def create_pages_view(request):
         return render(request, "app/create_pages.html", {"form": PageForm()})
 
     images = request.FILES.getlist("images")
-    json_file = request.FILES.get("time_data")
-    data = json.load(json_file)
-    time_data = {}
-    for i in data:
-        time_data[f'{i['filename']}'] = i['service_execution_time']
+    image_dict = {}
+    for i in images:
+        image_dict[os.path.splitext(i.name)[0]] = i
 
+    data = json.load(request.FILES.get("data"))
     pages = []
-    for image in images:
-        form_data = request.POST.copy()
-        form_data['execution_time'] = time_data.get(f'{os.path.splitext(image.name)[0]}')
-        form = PageForm(form_data, files={"image": image})
-        if form.is_valid() is False:
-            return render(request, "app/create_pages.html", {"form": form, "errors": form.errors})
-        page = form.save(commit=False)
-        pages.append(page)
+    for d in data:
+        if image_dict.get(d['filename']) is None:
+            continue
 
-    Page.objects.bulk_create(pages)
+        sections = []
+        for s in d.get('sections', []):
+            section_form = PageForm(
+                {'service': request.POST.get('service'), 'execution_time': None,
+                 'text': s.get('text'), 'type': PageTypes.SECTION}, files={'image': image_dict[s['filename']]})
+            if section_form.is_valid() is False:
+                return render(request, 'app/create_pages.html', {'form': section_form, 'errors': section_form.errors})
+            section = section_form.save(commit=False)
+            sections.append(section)
+
+        if sections:
+            page_form = PageSetForm({'execution_time': d.get('service_execution_time')},
+                                    files={'image': image_dict[d['filename']]})
+        else:
+            page_form = PageForm(
+                {'service': request.POST.get('service'), 'execution_time': d.get('service_execution_time'),
+                 'type': PageTypes.FULL}, files={'image': image_dict[d['filename']]})
+        if page_form.is_valid() is False:
+            return render(request, "app/create_pages.html", {"form": page_form, 'errors': page_form.errors})
+        page = page_form.save(commit=False)
+        pages.append({'page': page, 'sections': sections})
+    Page.objects.save_pages(pages)
     return redirect("app:index")
 
 
@@ -64,36 +77,24 @@ def rate_service_view(request, service_id):
     if request.method == "GET":
         page = Page.objects.get_new_page(request.user, service_id).first()
         criteria_form = get_form_class(page.service.criteria) if page else None
-        rating_form = RatingForm(initial={'page_id': getattr(page, 'id', None)})
         return render(request, "app/service_rate.html",
-                      {"criteria_form": criteria_form, 'rating_form': rating_form, "page": page,
-                       'service_id': service_id})
+                      {"criteria_form": criteria_form, "page": page, 'service_id': service_id})
 
     try:
         page = Page.objects.get_page(request.POST.get('page_id'))
     except Page.DoesNotExist:
         raise Http404("Page does not exist")
 
-    rating_form = RatingForm(request.POST)
     criteria_form = get_form_class(page.service.criteria)(request.POST)
-    if rating_form.is_valid() is False or criteria_form.is_valid() is False:
+    if criteria_form.is_valid() is False:
         page = Page.objects.get_new_page(request.user, service_id).first()
-        errors = ErrorDict()
-        errors.update(rating_form.errors)
-        errors.update(criteria_form.errors)
         return render(request, "app/service_rate.html",
-                      {"criteria_form": criteria_form, 'rating_form': rating_form, "page": page,
-                       'service_id': service_id, "errors": errors})
+                      {"criteria_form": criteria_form, "page": page, 'service_id': service_id,
+                       "errors": criteria_form.errors})
 
-    rating = rating_form.save(commit=False)
-    rating.page = page
-    rating.user = request.user
-    rating.criteria = page.service.criteria
     criteria = criteria_form.save(commit=False)
-    criteria.rating = rating
-
     try:
-        Rating.objects.save_rating(rating, criteria)
+        Rating.objects.save_rating(page, request.user, criteria)
     except IntegrityError:
         return HttpResponseServerError()
     return redirect("app:services-rate", service_id=service_id)
@@ -127,27 +128,18 @@ def rate_service_edit_view(request, user_id, rating_id):
         return HttpResponseNotFound()
 
     if request.method == "GET":
-        rating_form = RatingForm(instance=rating, initial={'page_id': getattr(rating.page, 'id', None)})
         criteria_form = get_form_class(rating.criteria)(instance=criteria)
         return render(request, "app/service_rate.html",
-                      {"rating_form": rating_form, 'criteria_form': criteria_form, 'page': rating.page,
-                       'service_id': rating.page.service_id})
+                      {'criteria_form': criteria_form, 'page': rating.page, 'service_id': rating.page.service_id})
 
-    rating_form = RatingForm(request.POST, instance=rating)
     criteria_form = get_form_class(rating.criteria)(request.POST, instance=criteria)
-    if rating_form.is_valid() is False or criteria_form.is_valid() is False:
-        errors = ErrorDict()
-        errors.update(rating_form.errors)
-        errors.update(criteria_form.errors)
+    if criteria_form.is_valid() is False:
         return render(request, "app/service_rate.html",
-                      {"rating_form": rating_form, 'criteria_form': criteria_form, "page": rating.page,
-                       'service_id': rating.page.service_idm, "errors": errors})
-
-    new_rating = rating_form.save(commit=False)
-    new_rating.created_at = timezone.now()
+                      {'criteria_form': criteria_form, "page": rating.page,
+                       'service_id': rating.page.service_idm, "errors": criteria_form.errors})
 
     try:
-        Rating.objects.save_rating(new_rating, criteria)
+        Rating.objects.update_rating(rating, criteria)
     except IntegrityError:
         return HttpResponseServerError()
     return redirect("app:user-service-ratings", service_id=rating.page.service_id, user_id=user_id)

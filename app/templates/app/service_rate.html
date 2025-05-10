@@ -10,28 +10,37 @@
             {% if page is None %}
                 <h2>{% trans 'Nothing more to rate' %}</h2>
                 <a href="{% url 'app:user-service-ratings' user_id=user.id service_id=service_id %}"
-                           class="mt-4 btn btn-outline-primary btn-lg">{% trans 'View rated pages' %}</a>
+                   class="mt-4 btn btn-outline-primary btn-lg">{% trans 'View rated pages' %}</a>
             {% else %}
-                <div class="row w-100">
-                    <div class="col-md-6 d-flex justify-content-center mb-3 mb-md-0">
-                        <img src="{{ page.image.url }}" alt="image" class="img-fluid border border-secondary rounded"/>
+                <div class="row w-100 align-items-start">
+                    <div class="col-md-6 mb-3">
+                        <div class="h-100">
+                            <img src="{{ page.image.url }}" alt="image"
+                                 class="img-fluid border border-secondary rounded mb-3"/>
+                            {% if page.text %}
+                                <div class="border border-secondary rounded p-3 bg-light">
+                                    {{ page.text }}
+                                </div>
+                            {% endif %}
+                        </div>
                     </div>
 
-                    <div class="col-md-6 d-flex justify-content-center align-items-center flex-column">
+                    <div class="col-md-6 d-flex flex-column align-items-center">
                         <form method="post" enctype="multipart/form-data"
-                              class="w-75 p-4 border border-secondary rounded">
+                              class="w-100 p-4 border border-secondary rounded">
                             {% csrf_token %}
                             {{ criteria_form|crispy }}
-                            {{ rating_form|crispy }}
+                            <input type="hidden" id="page_id" name="page_id" value="{{ page.id }}"/>
                             <button type="submit" class="btn btn-success mt-3 w-100">{% trans 'Upload' %}</button>
                         </form>
 
                         <a href="{% url 'app:user-service-ratings' user_id=user.id service_id=service_id %}"
-                           class="mt-4 btn btn-outline-primary btn-lg w-75">{% trans 'View rated pages' %}</a>
+                           class="mt-3 mb-3 btn btn-outline-primary btn-lg w-100">{% trans 'View rated pages' %}</a>
                     </div>
                 </div>
             {% endif %}
         </div>
     </div>
+
 
 {% endblock %}

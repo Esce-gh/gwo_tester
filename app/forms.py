@@ -1,14 +1,19 @@
 from django import forms
 
 from app.models import Page, Rating, CriteriaPageNumber, CriteriaHeaderFooter, CriteriaObjectDetection, \
-    CriteriaImageDetection, CriteriaOCR
+    CriteriaImageDetection, CriteriaOCR, PageSet
 
 
 class PageForm(forms.ModelForm):
     class Meta:
         model = Page
-        fields = ['service', 'image', 'execution_time']
-        widgets = {'execution_time': forms.HiddenInput}
+        fields = ['service', 'image', 'execution_time', 'type', 'text']
+
+
+class PageSetForm(forms.ModelForm):
+    class Meta:
+        model = PageSet
+        fields = ['image', 'execution_time']
 
 
 class RatingForm(forms.ModelForm):
