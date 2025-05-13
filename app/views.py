@@ -51,11 +51,11 @@ def create_pages_view(request):
             sections.append(section)
 
         if sections:
-            page_form = PageSetForm({'execution_time': d.get('service_execution_time')},
+            page_form = PageSetForm({'execution_time': d.get('execution_time')},
                                     files={'image': image_dict[d['filename']]})
         else:
             page_form = PageForm(
-                {'service': request.POST.get('service'), 'execution_time': d.get('service_execution_time'),
+                {'service': request.POST.get('service'), 'execution_time': d.get('execution_time'),
                  'type': PageTypes.FULL}, files={'image': image_dict[d['filename']]})
         if page_form.is_valid() is False:
             return render(request, "app/create_pages.html", {"form": page_form, 'errors': page_form.errors})
