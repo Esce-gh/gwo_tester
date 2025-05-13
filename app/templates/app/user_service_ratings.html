@@ -13,7 +13,7 @@
                 <div class="card h-100 d-flex flex-column">
                     <a href="{% url 'app:user-rating-edit' user_id=rating.user_id rating_id=rating.id %}">
                         <div class="ratio ratio-4x3">
-                            <img src="{{ rating.page.image.url }}" alt="image" class="card-img-top img-fluid" style="object-fit: cover;">
+                            <img src="{{ rating.page.image.url }}" alt="image" class="card-img-top img-fluid" style="object-fit: contain;">
                         </div>
                     </a>
                     <div class="card-body mt-auto">

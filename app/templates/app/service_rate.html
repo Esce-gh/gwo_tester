@@ -16,7 +16,7 @@
                     <div class="col-md-6 mb-3">
                         <div class="h-100">
                             <img src="{{ page.image.url }}" alt="image"
-                                 class="img-fluid border border-secondary rounded mb-3"/>
+                                 class="img-fluid border border-secondary rounded mb-3 {% if page.text %}p-3{% endif %}"/>
                             {% if page.text %}
                                 <div class="border border-secondary rounded p-3 bg-light">
                                     {{ page.text }}
