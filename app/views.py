@@ -1,6 +1,3 @@
-import json
-import os
-
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -11,58 +8,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_http_methods
 from django.views.generic import TemplateView, ListView
 
-from app.forms import PageForm, PageSetForm
-from app.models import Page, Service, Rating, PageTypes
+from app.models import Page, Service, Rating
 from app.utils import get_form_class, get_criteria_model
 
 
 class IndexView(LoginRequiredMixin, TemplateView):
     template_name = "app/index.html"
-
-
-@login_required(login_url='login')
-@require_http_methods(['GET', 'POST'])
-def create_pages_view(request):
-    if request.user.is_superuser is False:
-        return redirect("app:index")
-
-    if request.method == "GET":
-        return render(request, "app/create_pages.html", {"form": PageForm()})
-
-    images = request.FILES.getlist("images")
-    image_dict = {}
-    for i in images:
-        image_dict[os.path.splitext(i.name)[0]] = i
-
-    data = json.load(request.FILES.get("data"))
-    pages = []
-    for d in data:
-        if image_dict.get(d['filename']) is None:
-            continue
-
-        sections = []
-        for s in d.get('sections', []):
-            section_form = PageForm(
-                {'service': request.POST.get('service'), 'execution_time': None,
-                 'text': s.get('text'), 'type': PageTypes.SECTION}, files={'image': image_dict[s['filename']]})
-            if section_form.is_valid() is False:
-                return render(request, 'app/create_pages.html', {'form': section_form, 'errors': section_form.errors})
-            section = section_form.save(commit=False)
-            sections.append(section)
-
-        if sections:
-            page_form = PageSetForm({'execution_time': d.get('execution_time')},
-                                    files={'image': image_dict[d['filename']]})
-        else:
-            page_form = PageForm(
-                {'service': request.POST.get('service'), 'execution_time': d.get('execution_time'),
-                 'type': PageTypes.FULL}, files={'image': image_dict[d['filename']]})
-        if page_form.is_valid() is False:
-            return render(request, "app/create_pages.html", {"form": page_form, 'errors': page_form.errors})
-        page = page_form.save(commit=False)
-        pages.append({'page': page, 'sections': sections})
-    Page.objects.save_pages(pages)
-    return redirect("app:index")
 
 
 class ServiceListView(LoginRequiredMixin, ListView):

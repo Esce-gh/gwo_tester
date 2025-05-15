@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-08 09:48+0200\n"
+"POT-Creation-Date: 2025-05-15 13:51+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,63 +20,80 @@ msgstr ""
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
-#: app/models.py:36
+#: app/admin.py:41
+msgid "Add pages"
+msgstr "Wyślij strony"
+
+#: app/admin.py:86
+#, python-brace-format
+msgid "Added {page_count} pages/page sets."
+msgstr "Dodano {page_count} stron/sekcji"
+
+#: app/admin.py:108 templates/admin/app/rating/export_csv_form.html:6
+msgid "Export CSV"
+msgstr "Eksport do pliku CSV"
+
+#: app/models.py:60
 msgid "Service"
 msgstr "Usługa"
 
-#: app/models.py:37
+#: app/models.py:61 app/models.py:73
 msgid "Image"
 msgstr "Zdjęcie"
 
-#: app/models.py:38
+#: app/models.py:62 app/models.py:74
 msgid "Execution Time"
 msgstr "Czas wykonywania"
 
-#: app/models.py:79
+#: app/models.py:63
+msgid "Text"
+msgstr "Tekst"
+
+#: app/models.py:138
 msgid "Additional notes"
 msgstr "Dodatkowe uwagi"
 
-#: app/models.py:89
+#: app/models.py:150
 msgid "Is page number visible"
 msgstr "Czy numer strony jest widoczny"
 
-#: app/models.py:90
+#: app/models.py:151
 msgid "Is page number detected"
 msgstr "Czy numer strony jest zaznaczony"
 
-#: app/models.py:94
+#: app/models.py:155
 msgid "Is header visible"
 msgstr "Czy nagłówek jest widoczny"
 
-#: app/models.py:95
+#: app/models.py:156
 msgid "Is header detected"
 msgstr "Czy nagłówek jest zaznaczony"
 
-#: app/models.py:96
+#: app/models.py:157
 msgid "Is footer visible"
 msgstr "Czy stopka jest widoczna"
 
-#: app/models.py:97
+#: app/models.py:158
 msgid "Is footer detected"
 msgstr "Czy stopka jest zaznaczona"
 
-#: app/models.py:101
+#: app/models.py:162
 msgid "Visible objects"
 msgstr "Ile obiektów jest widocznych"
 
-#: app/models.py:102
+#: app/models.py:163
 msgid "Correctly detected objects"
 msgstr "Ile obiektów jest zaznaczonych prawidłowo"
 
-#: app/models.py:106
+#: app/models.py:167
 msgid "Visible images"
 msgstr "Ile obrazów jest widocznych"
 
-#: app/models.py:107
+#: app/models.py:168
 msgid "Correctly detected images"
 msgstr "Ile obrazów jest zaznaczonych prawidłowo"
 
-#: app/models.py:111
+#: app/models.py:172
 msgid "Number of misrecognized words"
 msgstr "Ile słów zostało źle odtworzonych"
 
@@ -84,7 +101,7 @@ msgstr "Ile słów zostało źle odtworzonych"
 msgid "Main page"
 msgstr "Strona główna"
 
-#: app/templates/app/base.html:16 app/templates/app/index.html:15
+#: app/templates/app/base.html:16 app/templates/app/index.html:11
 #: app/templates/app/service_list.html:4 app/templates/app/service_list.html:8
 msgid "Services"
 msgstr "Usługi"
@@ -98,24 +115,6 @@ msgstr "Wyloguj się"
 msgid "Login"
 msgstr "Zaloguj się"
 
-#: app/templates/app/create_pages.html:5 app/templates/app/create_pages.html:11
-#: app/templates/app/index.html:13
-msgid "Upload pages"
-msgstr "Wyślij strony"
-
-#: app/templates/app/create_pages.html:25
-msgid "Select images"
-msgstr "Wybierz obrazy"
-
-#: app/templates/app/create_pages.html:29
-msgid "Select JSON file"
-msgstr "Wybierz plik JSON"
-
-#: app/templates/app/create_pages.html:34
-#: app/templates/app/service_rate.html:26
-msgid "Upload"
-msgstr "Wyślij"
-
 #: app/templates/app/service_rate.html:5
 msgid "Rate service"
 msgstr "Oceń usługę"
@@ -125,9 +124,14 @@ msgid "Nothing more to rate"
 msgstr "Wszystko zostało ocenione"
 
 #: app/templates/app/service_rate.html:13
-#: app/templates/app/service_rate.html:30
+#: app/templates/app/service_rate.html:38
 msgid "View rated pages"
 msgstr "Wyświetl ocenione strony"
+
+#: app/templates/app/service_rate.html:34
+#: templates/admin/app/page/upload_pages_form.html:26
+msgid "Upload"
+msgstr "Wyślij"
 
 #: app/templates/app/signup.html:4 app/templates/app/signup.html:9
 #: app/templates/app/signup.html:14
@@ -141,6 +145,22 @@ msgstr "Oceny użytkownika"
 #: app/templates/app/user_service_ratings.html:8
 msgid "Your ratings for"
 msgstr "Twoje oceny dla"
+
+#: templates/admin/app/page/change_list.html:5
+msgid "Add many pages"
+msgstr "Dodaj wiele stron"
+
+#: templates/admin/app/page/upload_pages_form.html:18
+msgid "Select images"
+msgstr "Wybierz obrazy"
+
+#: templates/admin/app/page/upload_pages_form.html:22
+msgid "Select JSON file"
+msgstr "Wybierz plik JSON"
+
+#: templates/admin/app/rating/change_list.html:5
+msgid "Export all to CSV"
+msgstr "Eksportuj do pliku CSV"
 
 #: templates/registration/login.html:17
 msgid "Don't have an account?"

@@ -1,7 +1,7 @@
 from django import forms
 
 from app.models import Page, Rating, CriteriaPageNumber, CriteriaHeaderFooter, CriteriaObjectDetection, \
-    CriteriaImageDetection, CriteriaOCR, PageSet
+    CriteriaImageDetection, CriteriaOCR, PageSet, Service
 
 
 class PageForm(forms.ModelForm):
@@ -22,6 +22,10 @@ class RatingForm(forms.ModelForm):
     class Meta:
         model = Rating
         fields = ['page_id']
+
+
+class AdminExportForm(forms.Form):
+    service = forms.ModelChoiceField(queryset=Service.objects.all().order_by('name'))
 
 
 class CriteriaPageNumberForm(forms.ModelForm):

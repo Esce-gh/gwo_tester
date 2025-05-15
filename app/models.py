@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models, transaction
+from django.db.models import Prefetch
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
@@ -117,15 +118,26 @@ class Rating(models.Model):
     objects = RatingManager()
 
     def __str__(self):
-        return f"Rating of {self.page} by {self.user}"
+        return f"Rating of {self.page} by {self.user_id}"
 
     class Meta:
         unique_together = ['page', 'user']
 
 
+class CriteriaManager(models.Manager):
+    def get_all_ratings(self):
+        queryset = self.get_queryset().all().select_related('rating__page')
+        if self.model == CriteriaOCR:
+            queryset = queryset.prefetch_related(
+                Prefetch('rating__page__pagesetitem_set', queryset=PageSetItem.objects.select_related('pageset')))
+        return queryset
+
+
 class CriteriaBaseClass(models.Model):
     rating = models.OneToOneField(Rating, on_delete=models.RESTRICT)
     comment = models.TextField(blank=True, verbose_name=_('Additional notes'))
+
+    objects = CriteriaManager()
 
     class Meta:
         abstract = True

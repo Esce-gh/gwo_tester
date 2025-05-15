@@ -1,0 +1,39 @@
+{% extends "admin/base_site.html" %}
+
+{% load i18n %}
+
+{% block content %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div>
+            <label for="{{ form.service.id_for_label }}">{{ form.service.label }}</label>
+            <select name="{{ form.service.name }}" id="{{ form.service.id_for_label }}">
+                {% for val, label in form.service.field.choices %}
+                    <option value="{{ val }}"{% if form.service.value == val %}
+                            selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div>
+            <label for="images">{% trans 'Select images' %}:</label>
+            <input type="file" name="images" multiple required>
+        </div>
+        <div>
+            <label for="data">{% trans 'Select JSON file' %}:</label>
+            <input type="file" name="data" accept=".json,application/json" required>
+        </div>
+        <div>
+            <button type="submit">{% trans 'Upload' %}</button>
+        </div>
+
+        {% if errors %}
+            <ul>
+                {% for field, field_errors in errors.items %}
+                    {% for error in field_errors %}
+                        <li>{{ field }}: {{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </form>
+{% endblock %}
