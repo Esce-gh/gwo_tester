@@ -1,7 +1,7 @@
 from app.forms import CriteriaPageNumberForm, CriteriaHeaderFooterForm, CriteriaObjectDetectionForm, \
-    CriteriaImageDetectionForm, CriteriaOCRForm
+    CriteriaImageDetectionForm, CriteriaOCRForm, CriteriaObjectGroupsForm
 from app.models import RatingCriteria, CriteriaPageNumber, CriteriaHeaderFooter, CriteriaObjectDetection, \
-    CriteriaImageDetection, CriteriaOCR
+    CriteriaImageDetection, CriteriaOCR, CriteriaObjectGroups
 
 
 def get_form_class(criteria):
@@ -16,6 +16,8 @@ def get_form_class(criteria):
             return CriteriaImageDetectionForm
         case RatingCriteria.OCR:
             return CriteriaOCRForm
+        case RatingCriteria.OBJECT_GROUPS:
+            return CriteriaObjectGroupsForm
         case _:
             return None
 
@@ -32,5 +34,7 @@ def get_criteria_model(criteria):
             return CriteriaImageDetection
         case RatingCriteria.OCR:
             return CriteriaOCR
+        case RatingCriteria.OBJECT_GROUPS:
+            return CriteriaObjectGroups
         case _:
             return None

@@ -11,6 +11,7 @@ class RatingCriteria(models.TextChoices):
     OBJECT_DETECTION = 'OD', 'Object Detection Criteria'
     IMAGE_DETECTION = 'IMD', 'Image Detection Criteria'
     OCR = 'OCR', 'OCR Criteria'
+    OBJECT_GROUPS = 'OG', 'Object Groups Criteria'
 
 
 class PageTypes(models.TextChoices):
@@ -159,8 +160,12 @@ class CriteriaHeaderFooter(CriteriaBaseClass):
 
 
 class CriteriaObjectDetection(CriteriaBaseClass):
-    visible_objects = models.IntegerField(verbose_name=_("Visible objects"))
-    detected_objects = models.IntegerField(verbose_name=_("Correctly detected objects"))
+    visible_text_objects = models.IntegerField(verbose_name=_("Visible text objects"))
+    detected_text_objects = models.IntegerField(verbose_name=_("Correctly detected text objects"))
+    visible_image_objects = models.IntegerField(verbose_name=_("Visible image objects"))
+    detected_image_objects = models.IntegerField(verbose_name=_("Correctly detected image objects"))
+    visible_table_objects = models.IntegerField(verbose_name=_("Visible table objects"))
+    detected_table_objects = models.IntegerField(verbose_name=_("Correctly detected table objects"))
 
 
 class CriteriaImageDetection(CriteriaBaseClass):
@@ -170,3 +175,8 @@ class CriteriaImageDetection(CriteriaBaseClass):
 
 class CriteriaOCR(CriteriaBaseClass):
     word_recognition_errors = models.IntegerField(verbose_name=_("Number of misrecognized words"))
+
+
+class CriteriaObjectGroups(CriteriaBaseClass):
+    visible_groups = models.IntegerField(verbose_name=_("Visible object groups (image-description)"))
+    detected_groups = models.IntegerField(verbose_name=_("Correctly detected object groups (image-description)"))

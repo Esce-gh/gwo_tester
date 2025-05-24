@@ -1,7 +1,7 @@
 from django import forms
 
 from app.models import Page, Rating, CriteriaPageNumber, CriteriaHeaderFooter, CriteriaObjectDetection, \
-    CriteriaImageDetection, CriteriaOCR, PageSet, Service
+    CriteriaImageDetection, CriteriaOCR, PageSet, Service, CriteriaObjectGroups
 
 
 class PageForm(forms.ModelForm):
@@ -43,7 +43,15 @@ class CriteriaHeaderFooterForm(forms.ModelForm):
 class CriteriaObjectDetectionForm(forms.ModelForm):
     class Meta:
         model = CriteriaObjectDetection
-        fields = ['detected_objects', 'visible_objects', 'comment']
+        fields = ['visible_text_objects', 'detected_text_objects',
+                  'visible_image_objects', 'detected_image_objects',
+                  'visible_table_objects', 'detected_table_objects',
+                  'comment']
+        widgets = {
+            'comment': forms.Textarea(attrs={
+                'rows': 2,
+            }),
+        }
 
 
 class CriteriaImageDetectionForm(forms.ModelForm):
@@ -56,3 +64,9 @@ class CriteriaOCRForm(forms.ModelForm):
     class Meta:
         model = CriteriaOCR
         fields = ['word_recognition_errors', 'comment']
+
+
+class CriteriaObjectGroupsForm(forms.ModelForm):
+    class Meta:
+        model = CriteriaObjectGroups
+        fields = ['visible_groups', 'detected_groups', 'comment']

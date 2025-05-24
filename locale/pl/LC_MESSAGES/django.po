@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-15 13:51+0200\n"
+"POT-Creation-Date: 2025-05-24 12:01+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -20,82 +20,106 @@ msgstr ""
 "(n%100<12 || n%100>14) ? 1 : n!=1 && (n%10>=0 && n%10<=1) || (n%10>=5 && "
 "n%10<=9) || (n%100>=12 && n%100<=14) ? 2 : 3);\n"
 
-#: app/admin.py:41
+#: app/admin.py:42
 msgid "Add pages"
 msgstr "Wyślij strony"
 
-#: app/admin.py:86
+#: app/admin.py:87
 #, python-brace-format
 msgid "Added {page_count} pages/page sets."
 msgstr "Dodano {page_count} stron/sekcji"
 
-#: app/admin.py:108 templates/admin/app/rating/export_csv_form.html:6
+#: app/admin.py:109 templates/admin/app/rating/export_csv_form.html:6
 msgid "Export CSV"
 msgstr "Eksport do pliku CSV"
 
-#: app/models.py:60
+#: app/models.py:61
 msgid "Service"
 msgstr "Usługa"
 
-#: app/models.py:61 app/models.py:73
+#: app/models.py:62 app/models.py:74
 msgid "Image"
 msgstr "Zdjęcie"
 
-#: app/models.py:62 app/models.py:74
+#: app/models.py:63 app/models.py:75
 msgid "Execution Time"
 msgstr "Czas wykonywania"
 
-#: app/models.py:63
+#: app/models.py:64
 msgid "Text"
 msgstr "Tekst"
 
-#: app/models.py:138
+#: app/models.py:139
 msgid "Additional notes"
 msgstr "Dodatkowe uwagi"
 
-#: app/models.py:150
+#: app/models.py:151
 msgid "Is page number visible"
 msgstr "Czy numer strony jest widoczny"
 
-#: app/models.py:151
+#: app/models.py:152
 msgid "Is page number detected"
 msgstr "Czy numer strony jest zaznaczony"
 
-#: app/models.py:155
+#: app/models.py:156
 msgid "Is header visible"
 msgstr "Czy nagłówek jest widoczny"
 
-#: app/models.py:156
+#: app/models.py:157
 msgid "Is header detected"
 msgstr "Czy nagłówek jest zaznaczony"
 
-#: app/models.py:157
+#: app/models.py:158
 msgid "Is footer visible"
 msgstr "Czy stopka jest widoczna"
 
-#: app/models.py:158
+#: app/models.py:159
 msgid "Is footer detected"
 msgstr "Czy stopka jest zaznaczona"
 
-#: app/models.py:162
-msgid "Visible objects"
-msgstr "Ile obiektów jest widocznych"
-
 #: app/models.py:163
-msgid "Correctly detected objects"
-msgstr "Ile obiektów jest zaznaczonych prawidłowo"
+msgid "Visible text objects"
+msgstr "Ile obiektów tekstowych jest widocznych"
+
+#: app/models.py:164
+msgid "Correctly detected text objects"
+msgstr "Ile obiektów tekstowych jest zaznaczonych prawidłowo"
+
+#: app/models.py:165
+msgid "Visible image objects"
+msgstr "Ile obrazów jest widocznych"
+
+#: app/models.py:166
+msgid "Correctly detected image objects"
+msgstr "Ile obrazów jest zaznaczonych prawidłowo"
 
 #: app/models.py:167
+msgid "Visible table objects"
+msgstr "Ile tabel jest widocznych"
+
+#: app/models.py:168
+msgid "Correctly detected table objects"
+msgstr "Ile tabel jest zaznaczonych prawidłowo"
+
+#: app/models.py:172
 msgid "Visible images"
 msgstr "Ile obrazów jest widocznych"
 
-#: app/models.py:168
+#: app/models.py:173
 msgid "Correctly detected images"
 msgstr "Ile obrazów jest zaznaczonych prawidłowo"
 
-#: app/models.py:172
+#: app/models.py:177
 msgid "Number of misrecognized words"
 msgstr "Ile słów zostało źle odtworzonych"
+
+#: app/models.py:181
+msgid "Visible object groups (image-description)"
+msgstr "Ile grup (obraz-opis) jest widocznych"
+
+#: app/models.py:182
+msgid "Correctly detected object groups (image-description)"
+msgstr "Ile grup (obraz-opis) jest zaznaczonych prawidłowo"
 
 #: app/templates/app/base.html:15 app/templates/app/index.html:4
 msgid "Main page"
