@@ -11,7 +11,7 @@ from django.utils.translation import gettext_lazy as _
 
 from app.forms import AdminExportForm, PageForm, PageSetForm
 from app.models import Service, Rating, Page, CriteriaPageNumber, CriteriaHeaderFooter, CriteriaObjectDetection, \
-    CriteriaOCR, CriteriaImageDetection, PageSetItem, PageSet, PageTypes
+    CriteriaOCR, CriteriaImageDetection, PageSetItem, PageSet, PageTypes, CriteriaObjectGroups
 from app.utils import get_criteria_model
 
 admin.site.register(Service)
@@ -20,6 +20,7 @@ admin.site.register(CriteriaHeaderFooter)
 admin.site.register(CriteriaObjectDetection)
 admin.site.register(CriteriaImageDetection)
 admin.site.register(CriteriaOCR)
+admin.site.register(CriteriaObjectGroups)
 admin.site.register(PageSet)
 admin.site.register(PageSetItem)
 
